@@ -20,21 +20,21 @@ object ScalaBuffBuild extends Build {
 
 	lazy val buildSettings = Defaults.defaultSettings ++ Seq[Setting[_]](
     organization := "net.sandrogrzicic.scalabuff",
-		version := "0.10-SNAPSHOT",
+		version := "0.10-SNAPSHOT"
 	)
 
 //	override lazy val settings = Defaults.defaultSettings ++ buildSettings
 
 	lazy val defaultSettings =  buildSettings ++ Seq[Setting[_]](
-    scalaVersion := "2.9.1",
+    scalaVersion := "2.9.2",
 
 		resolvers += "Akka Maven Repository" at "http://akka.io/repository",
 
-		libraryDependencies += "org.scalatest" % "scalatest_2.9.1" % "1.6.1",
+		libraryDependencies += "org.scalatest" % "scalatest_2.9.2" % "1.6.1",
 		libraryDependencies += "com.google.protobuf" % "protobuf-java" % "2.4.1",
 
 		scalacOptions ++= Seq("-encoding", "utf8", "-unchecked", "-deprecation"),
-		javacOptions ++= Seq("-encoding", "utf8", "-Xlint:unchecked", "-Xlint:deprecation"),
+		javacOptions in (Compile, compile) ++= Seq("-encoding", "utf8", "-Xlint:unchecked", "-Xlint:deprecation"),
 
 		parallelExecution in GlobalScope := true,
 
