@@ -1,7 +1,5 @@
 import sbt._
 import Keys._
-import java.io.File
-
 /**
  * ScalaBuff SBT build file.
  *
@@ -17,18 +15,17 @@ import java.io.File
  *
  */
 object ScalaBuffBuild extends Build {
+        scalaVersion in ThisBuild := "2.9.2"
 
-	lazy val buildSettings = Seq(
-		name := "ScalaBuff",
-		organization := "net.sandrogrzicic",
+	lazy val commonSettings = Seq(
+		organization := "net.sandrogrzicic.scalabuff",
 		version := "1.0.0",
-		scalaVersion := "2.9.2",
 		logLevel := Level.Info
 	)
 
-	override lazy val settings = super.settings ++ buildSettings
+	//override lazy val settings = super.settings ++ buildSettings
 
-	lazy val defaultSettings = Defaults.defaultSettings ++ Seq(
+	lazy val defaultSettings = Defaults.defaultSettings ++ commonSettings ++ Seq(
 
 		resolvers ++= Seq(
 			"Akka Maven Repository" at "http://akka.io/repository",
@@ -43,7 +40,7 @@ object ScalaBuffBuild extends Build {
 		crossScalaVersions ++= Seq("2.10.0-M6"), // doesn't work yet because of no 2.10 ScalaTest
 
 		scalacOptions ++= Seq("-encoding", "utf8", "-unchecked", "-deprecation"),
-		javacOptions ++= Seq("-encoding", "utf8", "-Xlint:unchecked", "-Xlint:deprecation"),
+		javacOptions in (Compile, compile) ++= Seq("-encoding", "utf8", "-Xlint:unchecked", "-Xlint:deprecation"),
 
 		parallelExecution in GlobalScope := true,
 
@@ -68,12 +65,16 @@ object ScalaBuffBuild extends Build {
 //		}
 	)
 
+        lazy val root = Project(
+                id = "root",
+                base = file(".")) aggregate(compiler, runtime)
+
 	lazy val compiler = Project(
 		id = "compiler",
 		base = file("scalabuff-compiler"),
 		dependencies = Seq(runtime % "test->compile"),
 		settings = defaultSettings ++ Seq(
-			mainClass in (Compile, run) := Some("net.sandrogrzicic.scalabuff.compiler.ScalaBuff"),
+			//mainClass in (Compile, run) := Some("net.sandrogrzicic.scalabuff.compiler.ScalaBuff"),
 			mainClass in (Compile, packageBin) := Some("net.sandrogrzicic.scalabuff.compiler.ScalaBuff"),
 			fullRunTask(TaskKey[Unit]("update-test-resources"), Compile, "net.sandrogrzicic.scalabuff.test.UpdateTestResources")
 		)
